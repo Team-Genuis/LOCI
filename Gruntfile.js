@@ -163,16 +163,17 @@ module.exports = function(grunt) {
     replace: {
       config: {
         options: {
-          patterns: [
-            {
-              match: /<!--<script>var config;<\/script>-->/g,
-              replacement: '<script> var config = ' + JSON.stringify(require('./config/core.js')) + ';</script>'
-            }
-          ]
+          patterns: [{
+            match: /<!--<script>var config;<\/script>-->/g,
+            replacement: '<script> var config = ' + JSON.stringify(require('./config/core.js')) + ';</script>'
+          }]
         },
-        files: [
-          {expand: true, flatten: true, src: ['src/index.html'], dest: 'build/'}
-        ]
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['src/index.html'],
+          dest: 'build/'
+        }]
       }
     }
   });
@@ -180,7 +181,7 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', ['build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
-  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build','replace']);
+  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build', 'replace']);
   grunt.registerTask('transpile', ['babel:build', 'jsdoc']);
   //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
   //grunt.registerTask('default', ['concurrent:target1', 'concurrent:target2']);
