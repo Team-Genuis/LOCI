@@ -31,6 +31,7 @@ app
   })
   .use(mount('/', serve(__dirname + '/build')))
   .use(mount('/docs', serve(__dirname + '/docs')))
+  .use(mount('/three', serve(__dirname + '/three')))
   .listen(8000, () => {
     logger.info('info', 'Listening at http://localhost:8000');
   });

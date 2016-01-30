@@ -39,6 +39,16 @@ module.exports = function(grunt) {
         }]
       }
     },
+    browserify: {
+      dist: {
+        files: {
+          'build/loci.js': ['tmp/js/**/*.js']
+        },
+        options: {
+          //transform: ['coffeeify']
+        }
+      }
+    },
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -175,13 +185,106 @@ module.exports = function(grunt) {
           dest: 'build/'
         }]
       }
+    },
+    cordovacli: {
+      options: {
+        path: 'build',
+        cli: 'cca' // cca or cordova
+      },
+      cordova: {
+        options: {
+          command: ['create', 'platform', 'plugin', 'build'],
+          platforms: ['android'],
+          plugins: ['device', 'dialogs'],
+          path: 'build',
+          id: 'io.teamgenuis.loci',
+          name: 'LOCI'
+        }
+      },
+      create: {
+        options: {
+          command: 'create',
+          id: 'com.LOCI',
+          name: 'LOCI'
+        }
+      },
+      add_platforms: {
+        options: {
+          command: 'platform',
+          action: 'add',
+          platforms: ['android']
+        }
+      },
+      add_plugins: {
+        options: {
+          command: 'plugin',
+          action: 'add',
+          plugins: [
+            //'battery-status',
+            //'camera',
+            'console',
+            //'contacts',
+            'device',
+            'device-motion',
+            'device-orientation',
+            'dialogs',
+            //'file',
+            'geolocation',
+            //'globalization',
+            //'inappbrowser',
+            'media',
+            'media-capture',
+            'network-information',
+            'splashscreen',
+            'vibration'
+          ]
+        }
+      },
+      remove_plugin: {
+        options: {
+          command: 'plugin',
+          action: 'rm',
+          plugins: [
+            'battery-status'
+          ]
+        }
+      },
+      build_ios: {
+        options: {
+          command: 'build',
+          platforms: ['ios']
+        }
+      },
+      build_android: {
+        options: {
+          command: 'build',
+          platforms: ['android']
+        }
+      },
+      emulate_android: {
+        options: {
+          command: 'emulate',
+          platforms: ['android'],
+          args: ['--target', 'Nexus5']
+        }
+      },
+      add_facebook_plugin: {
+        options: {
+          command: 'plugin',
+          action: 'add',
+          plugins: [
+            'com.phonegap.plugins.facebookconnect'
+          ],
+          args: ['--variable', 'APP_ID=fb12132424', '--variable', 'APP_NAME=myappname']
+        }
+      }
     }
   });
 
   // Default task.
   grunt.registerTask('default', ['build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
-  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build', 'replace']);
+  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build', 'replace', 'browserify']);
   grunt.registerTask('transpile', ['babel:build', 'jsdoc']);
   //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
   //grunt.registerTask('default', ['concurrent:target1', 'concurrent:target2']);

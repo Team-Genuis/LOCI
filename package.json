@@ -34,6 +34,11 @@
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
+    "cca": "^0.8.1",
+    "cordova": "^6.0.0",
+    "grunt-browserify": "^4.0.1",
+    "grunt-check-dependencies": "^0.11.2",
+    "grunt-cordovacli": "^0.8.2",
     "grunt-replace": "^0.11.0",
     "humanize-number": "0.0.2",
     "jshint": "^2.4.1",

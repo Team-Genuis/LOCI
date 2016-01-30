@@ -1,29 +1,7 @@
-"use strict";
+var canvas = document.getElementById('loci');
 var scene = new THREE.Scene();
-////////////
-// CAMERA //
-////////////
 
-// set the view size in pixels (custom or according to window size)
-// var SCREEN_WIDTH = 400, SCREEN_HEIGHT = 300;
-var SCREEN_WIDTH = window.innerWidth,
-  SCREEN_HEIGHT = window.innerHeight;
-// camera attributes
-var VIEW_ANGLE = 45,
-  ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
-  NEAR = 0.1,
-  FAR = 20000;
-// STATS
-var stats = new Stats();
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.bottom = '0px';
-stats.domElement.style.zIndex = 100;
-document.body.appendChild(stats.domElement);
-// set up camera
-var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-// add the camera to the scene
-scene.add(camera);
-
+var w = window.innerWidth, h = window.innerHeight;
 //////////////
 // RENDERER //
 //////////////
@@ -31,46 +9,51 @@ var renderer;
 // create and start the renderer; choose antialias setting.
 if (Detector.webgl) {
   renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
     antialias: true
   });
 } else {
-  renderer = new THREE.CanvasRenderer();
+  renderer = new THREE.CanvasRenderer({
+    canvas: canvas
+  });
 }
 
-renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+var adjustSize = () => {
+  console.log('wtf');
+  renderer.setSize(w, h);
+};
 
-document.body.appendChild(renderer.domElement);
-var numRow = 5,
-  numCol = 5;
 
-var geometry = new THREE.BoxGeometry(1, 0.2, 1);
-var material = new THREE.MeshPhongMaterial({
-  color: 0xffffff,
-  transparent: true,
-  opacity: 1
-});
-var cube;
+// STATS
+var stats = new Stats();
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.bottom = '0px';
+stats.domElement.style.zIndex = 100;
+document.body.appendChild(stats.domElement);
 
-var grid = [];
+////////////
+// CAMERA //
+////////////
+var VIEW_ANGLE = 45,
+  ASPECT = w/h,
+  NEAR = 0.1,
+  FAR = 20000;
+// set up camera
+var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+// add the camera to the scene
+scene.add(camera);
 
-for (let i = -1 * Math.floor(numRow / 2); i <= Math.floor(numRow / 2); i++) {
-  for (let j = -1 * Math.floor(numCol / 2); j <= Math.floor(numCol / 2); j++) {
-    cube = new THREE.Mesh(geometry, material);
-    cube.position.set(i * 1.05, 0, j * 1.05);
-    grid.push(cube);
-    scene.add(cube);
-  }
-}
+import grid from './grid';
+scene.add(grid.threeGroup);
 
 var ambientLight = new THREE.AmbientLight(0x000000);
 scene.add(ambientLight);
-
 camera.position.z = 3;
 camera.position.y = 15;
 camera.position.x = 5;
 
 camera.lookAt(scene.position);
-camera.rotation.z = 0.785398;
+//camera.rotation.z = 0.785398;
 
 var lights = [];
 lights[0] = new THREE.PointLight(0xffffff, 1, 0);
@@ -87,15 +70,23 @@ scene.add(lights[2]);
 
 var render = function() {
   requestAnimationFrame(render);
-  cube.rotation.x += 0.05;
-  cube.rotation.y += 0.05;
-  scene.rotation.x += 0.05;
-  scene.rotation.y += 0.05;
   renderer.render(scene, camera);
 };
+
+adjustSize();
 render();
+
 window.addEventListener("resize", () => {
-  SCREEN_WIDTH = window.innerWidth;
-  SCREEN_HEIGHT = window.innerHeight;
-  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  adjustSize();
 });
+
+var tiles = require('./playerTiles')(5,2);// from './grid';
+tiles.threeGroup.rotation.x = -0.25;
+tiles.threeGroup.position.z = - 1.25;
+tiles.threeGroup.rotation.z = -0.5;
+scene.add(tiles.threeGroup);
+
+var tiles = require('./playerTiles')(5,1);// from './grid';
+tiles.threeGroup.rotation.x = 0.5;
+tiles.threeGroup.position.y = 1;
+scene.add(tiles.threeGroup);
