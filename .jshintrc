@@ -12,7 +12,8 @@
     "runs": false,
     "THREE": true,
     "Detector": true,
-    "Stats": true
+    "Stats": true,
+    "THREEx": true
   },
   "node": true,
   "esnext": true,
