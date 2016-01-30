@@ -1,8 +1,8 @@
 {
-  "name": "ggj",
+  "name": "LOCI",
   "description": "",
-  "version": "0.1.0",
-  "author": "Genuis",
+  "version": "0.0.1",
+  "author": "Team-Genuis",
   "contributors": [
     "Selby Kendrick"
   ],
@@ -10,7 +10,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "engines": {
-    "node": "~5.3"
+    "node": "^5.3"
   },
   "dependencies": {
     "body-parser": "^1.14.2",
@@ -44,5 +44,6 @@
     "test": "tape tests/*.js",
     "lint": "jshint -c .jshintrc --exclude ./node_modules ."
   },
-  "main": "./server"
+  "main": "./server",
+  "license": "MIT"
 }
