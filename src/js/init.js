@@ -1,3 +1,4 @@
+"use strict";
 var scene = new THREE.Scene();
 ////////////
 // CAMERA //
@@ -12,6 +13,12 @@ var VIEW_ANGLE = 45,
   ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
   NEAR = 0.1,
   FAR = 20000;
+  // STATS
+	var stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	document.body.appendChild( stats.domElement );
 // set up camera
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 // add the camera to the scene
@@ -31,27 +38,30 @@ if (Detector.webgl){
 }
 
 renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 document.body.appendChild(renderer.domElement);
 var numRow = 5,
   numCol = 5;
 
 var geometry = new THREE.BoxGeometry(1, 0.2, 1);
-var material = new THREE.MeshPhongMaterial( { color:0xff0000, transparent:true, opacity:1 } );
+var material = new THREE.MeshPhongMaterial( { color:0xffffff, transparent:true, opacity:1 } );
 var cube;
 
-for (var i = -1 * Math.floor(numRow / 2); i <= Math.floor(numRow / 2); i++) {
-  for (var j = -1 * Math.floor(numCol / 2); j <= Math.floor(numCol / 2); j++) {
+var grid = [];
+
+for (let i = -1 * Math.floor(numRow / 2); i <= Math.floor(numRow / 2); i++) {
+  for (let j = -1 * Math.floor(numCol / 2); j <= Math.floor(numCol / 2); j++) {
     cube = new THREE.Mesh(geometry, material);
-    cube.position.set(i * 1.5, 0, j * 1.5);
+    cube.position.set(i * 1.05, 0, j * 1.05);
+    grid.push(cube);
     scene.add(cube);
-    console.log(i, j);
   }
 }
 
-var ambientLight = new THREE.AmbientLight( 0xFFF000 );
+var ambientLight = new THREE.AmbientLight( 0x000000 );
 			scene.add( ambientLight );
 
-camera.position.z = 0;
+camera.position.z = 3;
 camera.position.y = 15;
 camera.position.x = 5;
 
@@ -80,3 +90,8 @@ var render = function() {
   renderer.render(scene, camera);
 };
 render();
+window.addEventListener("resize", ()=>{
+   SCREEN_WIDTH = window.innerWidth;
+    SCREEN_HEIGHT = window.innerHeight;
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+});

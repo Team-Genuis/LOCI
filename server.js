@@ -1,35 +1,38 @@
 'use strict';
-/*
-var util = require('util');
-var fs = require('fs');
-var crypto = require('crypto');
-var bcrypt = require('bcrypt');
-var http = require('http');
-var path = require('path');
-var _ = require('lodash');
-var feathersLogger = require('feathers-logger');
-var Sequelize = require('sequelize');
+var clock = require('./util/clock.js');
 
-var swaggerize = require('swaggerize-express');
-var swaggerSequelize = require('./modules/swagger-sequelize');
-var sequelizeService = require('feathers-sequelize');
+var winston = require('winston'); // Logger
+var serve = require('koa-static');
+var mount = require('koa-mount');
+
+var koa = require('koa');
 
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-*/
-var winston = require('winston');
-var feathers = require('feathers');
-var app = global.app = feathers();
 
+var logger = new winston.Logger({
+  level: 'verbose',
+  transports: [
+    new(winston.transports.Console)({
+      colorize: 'all'
+    })
+  ]
+});
 
-// Serve public folder for everybody
+logger.info('Creating loci server instance.');
+var app = koa();
+
+// Serve the public
 app
-  .use('/', feathers.static(__dirname + '/build'))
+  .use(function*(next) {
+    let start = new Date;
+    yield next;
+    logger.log('verbose', '%s %s - %s', this.method, this.url, clock.since(start, 'human'));
+  })
+  .use(mount('/', serve(__dirname + '/build')))
+  .use(mount('/docs', serve(__dirname + '/docs')))
   .listen(8000, () => {
-    winston.info('info', 'Your params are:', {
-      foo: 'bar'
-    });
+    logger.info('info', 'Listening at http://localhost:8000');
   });
-
 
 module.exports = app; // for testing

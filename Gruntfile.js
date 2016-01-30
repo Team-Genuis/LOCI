@@ -27,9 +27,7 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMap: true,
-        presets: ['es2015'],
-        //modules: "common",
-        //plugins: ["babel-plugin-transform-es2015-modules-amd"]
+        presets: ['es2015']
       },
       build: {
         files: [{
@@ -53,18 +51,12 @@ module.exports = function(grunt) {
         tasks: ['build'],
 
         options: {
-     livereload: true,
-   },
-        //options: {
-        //  livereload: true
-        //}
+          livereload: true,
+        },
       },
       config: {
         files: ['config/*.js'],
         tasks: ['copy:config'],
-        //options: {
-        //  livereload: true
-        //}
       }
     },
     /**
@@ -95,12 +87,7 @@ module.exports = function(grunt) {
               }, 1000);
             });
             /** Update .rebooted to fire Live-Reload **/
-            nodemon.on('restart', function() {
-              // Delay before server listens on port
-              setTimeout(function() {
-                require('fs').writeFileSync('.rebooted', 'rebooted');
-              }, 1000);
-            });
+            nodemon.on('restart', function() {});
           }
         }
       }
@@ -172,13 +159,28 @@ module.exports = function(grunt) {
         output: 'console'
       },
       files: ['tests/**/*.js']
+    },
+    replace: {
+      config: {
+        options: {
+          patterns: [
+            {
+              match: /<!--<script>var config;<\/script>-->/g,
+              replacement: '<script> var config = ' + JSON.stringify(require('./config/core.js')) + ';</script>'
+            }
+          ]
+        },
+        files: [
+          {expand: true, flatten: true, src: ['src/index.html'], dest: 'build/'}
+        ]
+      }
     }
   });
 
   // Default task.
   grunt.registerTask('default', ['build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
-  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build']);
+  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build','replace']);
   grunt.registerTask('transpile', ['babel:build', 'jsdoc']);
   //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
   //grunt.registerTask('default', ['concurrent:target1', 'concurrent:target2']);

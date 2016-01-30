@@ -11,7 +11,8 @@
     "waitsFor": false,
     "runs": false,
     "THREE": true,
-    "Detector": true
+    "Detector": true,
+    "Stats": true
   },
   "node": true,
   "esnext": true,
