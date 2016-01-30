@@ -1,7 +1,8 @@
 var canvas = document.getElementById('loci');
 var scene = new THREE.Scene();
 
-var w = window.innerWidth, h = window.innerHeight;
+var w = window.innerWidth,
+  h = window.innerHeight;
 //////////////
 // RENDERER //
 //////////////
@@ -35,7 +36,7 @@ document.body.appendChild(stats.domElement);
 // CAMERA //
 ////////////
 var VIEW_ANGLE = 45,
-  ASPECT = w/h,
+  ASPECT = w / h,
   NEAR = 0.1,
   FAR = 20000;
 // set up camera
@@ -68,25 +69,62 @@ scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var render = function() {
-  requestAnimationFrame(render);
-  renderer.render(scene, camera);
-};
+var tiles = require('./playerTiles')(5, 2); // from './grid';
+tiles.threeGroup.rotation.x = -0.25;
+tiles.threeGroup.position.z = -1.25;
+tiles.threeGroup.rotation.z = -0.5;
+scene.add(tiles.threeGroup);
 
+var tiles = require('./playerTiles')(5, 1); // from './grid';
+tiles.threeGroup.rotation.x = 0.5;
+tiles.threeGroup.position.y = 1;
+scene.add(tiles.threeGroup);
+
+// material meashes saving
+//var materials = {};
+//var new_material = new THREE.MeshLambertMaterial({
+//  opacity: 0.85
+//});
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+var lastIntersects = [];
 adjustSize();
-render();
 
 window.addEventListener("resize", () => {
   adjustSize();
 });
 
-var tiles = require('./playerTiles')(5,2);// from './grid';
-tiles.threeGroup.rotation.x = -0.25;
-tiles.threeGroup.position.z = - 1.25;
-tiles.threeGroup.rotation.z = -0.5;
-scene.add(tiles.threeGroup);
+var update = function() {
+  // update the picking ray with the camera and mouse position
+  raycaster.setFromCamera(mouse, camera);
+  //console.log(scene.children);
 
-var tiles = require('./playerTiles')(5,1);// from './grid';
-tiles.threeGroup.rotation.x = 0.5;
-tiles.threeGroup.position.y = 1;
-scene.add(tiles.threeGroup);
+  // calculate objects intersecting the picking ray
+  var intersects = raycaster.intersectObjects(scene.children, true);
+
+  for (let i = 0; i < lastIntersects.length; i++) {
+
+    lastIntersects[i].object.material.opacity = 1.0;
+
+  }
+  for (let i = 0; i < intersects.length; i++) {
+
+    intersects[i].object.material.opacity = 0.7;
+
+  }
+  lastIntersects = intersects;
+
+};
+
+var render = function() {
+  renderer.render(scene, camera);
+};
+
+var loop = function() {
+  update();
+  render();
+  requestAnimationFrame(loop, renderer.canvas);
+};
+loop();
