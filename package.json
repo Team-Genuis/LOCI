@@ -1,0 +1,36 @@
+{
+  "name": "ggj",
+  "description": "",
+  "version": "0.1.0",
+  "author": "us",
+  "contributors": [],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "engines": {
+    "node": "~5.3"
+  },
+  "dependencies": {
+    "express": "^4.0.0",
+    "lodash": "^3.10.1",
+    "swagger-sequelize": "0.0.4",
+    "swaggerize-express": "^4.0.0",
+    "three": "^0.73.2"
+  },
+  "devDependencies": {
+    "enjoi": "~0.1.16",
+    "grunt-tape": "0.0.2",
+    "istanbul": "~0.2.3",
+    "js-yaml": "^3.2.6",
+    "jshint": "^2.4.1",
+    "supertest": "~0.13.0",
+    "tape": "^3.0.0"
+  },
+  "scripts": {
+    "test": "tape tests/*.js",
+    "cover": "istanbul cover tape -- test/*.js",
+    "lint": "jshint -c .jshintrc --exclude ./node_modules .",
+    "regenerate": "yo swaggerize --only=handlers,models,tests --framework express --apiPath config/petstore.json"
+  },
+  "main": "./server"
+}
