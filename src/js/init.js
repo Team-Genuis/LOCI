@@ -80,13 +80,13 @@ window.addEventListener("resize", () => {
   adjustSize();
 });
 
-var tiles = require('./playerTiles')(5,2);// from './grid';
+var tiles = require('./randomTiles')(5,2);// from './grid';
 tiles.threeGroup.rotation.x = -0.25;
 tiles.threeGroup.position.z = - 1.25;
 tiles.threeGroup.rotation.z = -0.5;
 scene.add(tiles.threeGroup);
 
-var tiles = require('./playerTiles')(5,1);// from './grid';
+var tiles = require('./randomTiles')(5,1);// from './grid';
 tiles.threeGroup.rotation.x = 0.5;
 tiles.threeGroup.position.y = 1;
 scene.add(tiles.threeGroup);
