@@ -186,6 +186,13 @@ module.exports = function(grunt) {
         }]
       }
     },
+    checkDependencies: {
+      this: {
+        options: {
+          install: true
+        }
+      }
+    },
     cordovacli: {
       options: {
         path: 'build',
@@ -282,7 +289,7 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['build', 'concurrent:watchers']);
+  grunt.registerTask('default', ['checkDependencies','build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
   grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build', 'replace', 'browserify']);
   grunt.registerTask('transpile', ['babel:build', 'jsdoc']);
