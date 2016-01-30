@@ -1,6 +1,6 @@
-build/
-docs/
-tmp/
+build
+docs
+tmp
 
 # IDE files
 .idea
