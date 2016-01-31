@@ -62,6 +62,7 @@ module.exports = function(grunt) {
 
         options: {
           livereload: true,
+          debounceDelay: 1000
         },
       },
       config: {
@@ -84,7 +85,7 @@ module.exports = function(grunt) {
             "NODE_CONFIG": "dev"
           },
           watch: ["**/*", "!.git/", "!tmp/"],
-          delay: 300,
+          delay: 500,
           callback: function(nodemon) {
             nodemon.on('log', function(event) {
               console.log(event.colour);

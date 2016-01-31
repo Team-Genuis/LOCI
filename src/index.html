@@ -31,6 +31,56 @@
   <script src="https://stemkoski.github.io/Three.js/js/Stats.js"></script>
   <script src="/three/SubdivisionModifier.js"></script>
   <script src="/loci.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script>
+    console.log(' hey');
+    $(window).scroll(function() {
+      if ($(window).scrollTop() >= 200) {
+        $("#floatbar").css({
+          position: 'fixed',
+          left: '0',
+          top: '0'
+        });
+      } else {
+        $("#floatbar").css({
+          position: 'absolute',
+          left: '0',
+          top: '200px'
+        });
+      }
+    });
+    $(window).on('beforeunload', function() {
+      socket.close();
+      console.log('close socket');
+    });
+    var socket = io();
+    $('#connectTwitch').click(function() {
+      socket.emit('connectTwitch');
+      console.log('connect socket');
+
+      return false;
+    });
+    $('#disconnectTwitch').click(function() {
+      $('#messages').empty();
+      socket.emit('disconnectTwitch');
+      console.log('disconnect socket');
+    });
+    $('form').submit(function() {
+      socket.emit('chat message', $('#m').val());
+
+      console.log('message: ', $('#m').val());
+      $('#m').val('');
+
+      return false;
+    });
+    socket.on('chat message', function(msg) {
+      $('#messages').append($('<li>').text(msg));
+      console.log($('#messages').scrollTop);
+      $('#messages').scrollTop = $('#messages').scrollHeight;
+      return false;
+    });
+  </script>
 </body>
 
 </html>

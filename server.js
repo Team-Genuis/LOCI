@@ -5,7 +5,7 @@ var winston = require('winston'); // Logger
 var serve = require('koa-static');
 var mount = require('koa-mount');
 
-var koa = require('koa');
+var koa = require('koa.io');
 
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -21,6 +21,26 @@ var logger = new winston.Logger({
 
 logger.info('Creating loci server instance.');
 var app = koa();
+
+// middleware for connect and disconnect
+app.io.use(function* userLeft(next) {
+  // on connect
+  logger.log('somebody connected');
+  logger.log(this.headers);
+  yield* next;
+  // on disconnect
+  if (this.addedUser) {
+    delete usernames[this.username];
+    --numUsers;
+
+    // echo globally that this client has left
+    this.broadcast.emit('user left', {
+      username: this.username,
+      numUsers: numUsers
+    });
+  }
+  logger.log('somebody left');
+});
 
 // Serve the public
 app
