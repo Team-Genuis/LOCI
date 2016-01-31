@@ -30,7 +30,7 @@ var degToRad = (deg) => {
 // STATS
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
-stats.domElement.style.top = '0px';
+stats.domElement.style.top = '20vh';
 stats.domElement.style.zIndex = 100;
 document.body.appendChild(stats.domElement);
 
@@ -91,10 +91,9 @@ scene.add(tiles.threeGroup);
 
 var testText = require('./lib/text')('LOCI');
 //testText.rotation.z += 1.5708/2;
-
 //testText.rotation.z = -1.5708;
-//testText.rotation.z = 1.5708;
-testText.position.x = -4;
+testText.rotation.y = degToRad(20);
+testText.position.x = -4.5;
 testText.position.z = 1.5;
 scene.add(testText);
 
