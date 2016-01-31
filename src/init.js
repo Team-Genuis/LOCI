@@ -123,13 +123,13 @@ var updateTile = function (pos, type) {
   console.log(pos, type);
   const imagePath = '/img/BasicBuildings/';
 
-  const buildingTypes = [
+  /*const buildingTypes = [
     'Archives',
     'Chapel',
     'Fortress',
     'GuildHall',
     'Tavern'
-  ];
+  ];*/
 
   function buildUrl(type){
     return imagePath + type + '.jpg';
