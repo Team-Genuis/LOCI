@@ -26,6 +26,7 @@ var app = koa();
 app.io.use(function* userLeft(next) {
   // on connect
   logger.log('somebody connected');
+  console.log('Server: somebody connected');
   logger.log(this.headers);
   yield* next;
   // on disconnect
@@ -40,8 +41,30 @@ app.io.use(function* userLeft(next) {
     });
   }
   logger.log('somebody left');
+  console.log('Server: somebody left');
 });
 
+app.io.route('addPlayer', function* (next, username){
+  this.username = username;
+  usernames[username] = username;
+  ++numUsers;
+  this.addedUser = true;
+  this.emit('enter', {
+    numUsers : numUsers
+  });
+  logger.log('Server: A player was added');
+  console.log('Server: A player was added');
+});
+
+//When client does an action, listen and broadcast
+app.io.route('playerAction', function* (next, message){
+  this.emit('playerAction', {
+    username: this.username,
+    message: 'Someone did this: ' + message
+  });
+  logger.log('Server: A player did an action');
+  console.log('Server: A player did an action');
+});
 // Serve the public
 app
   .use(function*(next) {

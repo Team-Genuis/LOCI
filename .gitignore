@@ -18,3 +18,5 @@ build/index.html
 docs
 # Temp folder
 tmp
+# Jetbrains IDE generated files
+.idea
