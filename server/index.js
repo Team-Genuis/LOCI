@@ -8,9 +8,6 @@ var mount = require('koa-mount');
 
 var koa = require('koa.io');
 
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
 var logger = new winston.Logger({
   level: 'silly',
   transports: [
