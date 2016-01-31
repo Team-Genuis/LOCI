@@ -1,7 +1,31 @@
-/* global $, io */
+/* global $, io, irc */
 $(function() {
+  //var irc = require('tmi.js');
   var socket = io();
-
+  var channelList = ['#twitchplayspokemon'], doTimeouts = true;
+  if(doTimeouts) console.log('Not printing timeouts from twitch');
+  var options = {
+    options: {
+      debug: true
+    },
+    connection: {
+      random: "chat",
+      reconnect: true
+    },
+    channels: channelList
+  };
+  var twitchClient = new irc.client(options);
+  twitchClient.connect();
+  twitchClient.removeAllListeners();
+  twitchClient.addListener('message', handleChat);
+  function handleChat(channel, twitchUser, twitchMessage, self) {
+    var twitchName = twitchUser.username;
+    console.log('Channel: '+channel + self);
+    socket.emit('message', {
+      username: twitchName,
+      message: twitchMessage
+    });
+  }
   $(window).on('beforeunload', function() {
     socket.close();
     console.log('close socket');
@@ -66,7 +90,7 @@ $(function() {
     $('#chatBody').append('ACTION>>> ', msg.message, '<br>');
     $("#chatBody").animate({
       scrollTop: $('#chatBody').prop("scrollHeight")
-    }, "slow");
+    });
     return false;
   });
 
@@ -75,7 +99,7 @@ $(function() {
     $('#chatBody').append('Chat> ', msg.message, '<br>');
     $("#chatBody").animate({
       scrollTop: $('#chatBody').prop("scrollHeight")
-    }, "slow");
+    });
 
     return false;
   });
