@@ -35,26 +35,15 @@
   <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
   <script>
     console.log(' hey');
-    $(window).scroll(function() {
-      if ($(window).scrollTop() >= 200) {
-        $("#floatbar").css({
-          position: 'fixed',
-          left: '0',
-          top: '0'
-        });
-      } else {
-        $("#floatbar").css({
-          position: 'absolute',
-          left: '0',
-          top: '200px'
-        });
-      }
-    });
     $(window).on('beforeunload', function() {
       socket.close();
       console.log('close socket');
     });
     var socket = io();
+    $(window).click(function () {
+      console.log('Click!');
+      socket.emit('playerAction');
+    });
     $('#connectTwitch').click(function() {
       socket.emit('connectTwitch');
       console.log('connect socket');
@@ -74,10 +63,8 @@
 
       return false;
     });
-    socket.on('chat message', function(msg) {
-      $('#messages').append($('<li>').text(msg));
-      console.log($('#messages').scrollTop);
-      $('#messages').scrollTop = $('#messages').scrollHeight;
+    socket.on('playerMessage', function(msg) {
+      console.log('Client player messsage: ' + msg);
       return false;
     });
   </script>
