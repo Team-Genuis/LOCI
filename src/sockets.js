@@ -2,7 +2,7 @@
 $(function() {
   //var irc = require('tmi.js');
   var socket = io();
-  var channelList = ['#twitchplayspokemon'], doTimeouts = true;
+  var channelList = ['#locigamebot'], doTimeouts = true;
   if(doTimeouts) console.log('Not printing timeouts from twitch');
   var options = {
     options: {
@@ -88,6 +88,7 @@ $(function() {
   socket.on('playerAction', function(msg) {
     console.log('Client player messsage: ' + msg);
     $('#chatBody').append('ACTION>>> ', msg.message, '<br>');
+    $('#chatBody').scrollTop = $('#chatBody').scrollHeight;
     $("#chatBody").animate({
       scrollTop: $('#chatBody').prop("scrollHeight")
     });
@@ -97,6 +98,7 @@ $(function() {
   socket.on('chatMessage', function(msg) {
     console.log('Client player chat messsage: ' + msg);
     $('#chatBody').append('Chat> ', msg.message, '<br>');
+    $('#chatBody').scrollTop = $('#chatBody').scrollHeight;
     $("#chatBody").animate({
       scrollTop: $('#chatBody').prop("scrollHeight")
     });
