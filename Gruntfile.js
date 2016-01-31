@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     //},
     concurrent: {
       watchers: {
-        tasks: ['watch:server', 'nodemon:dev'],
+        tasks: ['watch:app','watch:server', 'nodemon:dev'],
         options: {
           logConcurrentOutput: true
         }
@@ -33,6 +33,26 @@ module.exports = function(grunt) {
             {expand: true, cwd: 'src/js/', src: ['Ryan.js'], dest: 'src/lib/', ext: '.js'}
           ]
         }
+  },
+  watch: {
+    app: {
+      files: ['src/**/*', 'Gruntfile.js'],
+      tasks: ['build'],
+      options: {
+        reload: true,
+        livereload: {
+          port: 9000
+        },
+        debounceDelay: 1000
+      },
+    },
+    server: {
+      files: ['server/**/*', 'Gruntfile.js'],
+      options: {
+        livereload: true,
+        debounceDelay: 1000
+      },
+    },
   },
     babel: {
       options: {
@@ -70,23 +90,6 @@ module.exports = function(grunt) {
         jshintrc: '.jshintrc'
       },
       all: ['src/**/*.js', 'test/**/*.js', '!src/vendor/**/*','!src/js/Ryan.js']
-    },
-    watch: {
-      app: {
-        files: ['src/**/*', 'Gruntfile.js'],
-        tasks: ['build'],
-        options: {
-          livereload: true,
-          debounceDelay: 1000
-        },
-      },
-      server: {
-        files: ['src/**/*', 'Gruntfile.js'],
-        options: {
-          livereload: true,
-          debounceDelay: 1000
-        },
-      },
     },
     jsdoc: {
       dist: {
@@ -320,8 +323,7 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', ['checkDependencies', 'jshint', 'build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
-  grunt.registerTask('build', [ 'transpile', 'copy:assets', 'replace', 'browserify','babel']);
-  grunt.registerTask('transpile', ['jsdoc']);
+  grunt.registerTask('build', ['copy:assets', 'replace', 'browserify','babel','jsdoc']);
   grunt.registerTask('clean', ['clean:tmp']);
   //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
   //grunt.registerTask('default', ['concurrent:target1', 'concurrent:target2']);
