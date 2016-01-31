@@ -1,10 +1,12 @@
 var textGeometry = (str) => {
   var text3d = new THREE.TextGeometry(str, {
     size: 1,
-    height: 1,
-    curveSegments: 2,
-    font: "helvetiker"
-
+    height: 0.5,
+    curveSegments: 4,
+    font: "helvetiker",
+bevelEnabled: true,
+bevelThickness: 0.2,
+bevelSize: 0.0
   });
 
   text3d.computeBoundingBox();
@@ -16,7 +18,7 @@ var textGeometry = (str) => {
       overdraw: 0.5
     }),
     new THREE.MeshBasicMaterial({
-      color: 0x000000,
+      color: 0xFF0000,
       overdraw: 0.5
     })
   ]);

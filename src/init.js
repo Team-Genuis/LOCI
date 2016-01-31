@@ -27,7 +27,6 @@ var degToRad = (deg) => {
   return Math.PI / 180 * deg;
 };
 
-
 // STATS
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
@@ -49,9 +48,12 @@ camera.rotation.z = -1.5708;
 // add the camera to the scene
 scene.add(camera);
 
-import grid from './grid';
-var board = grid(5);
+var createGrid = require('./lib/grid');
+var board = createGrid(5);
+board.threeGroup.rotation.x = degToRad(0);
 board.threeGroup.rotation.y = degToRad(45);
+board.threeGroup.rotation.z = degToRad(20);
+board.threeGroup.position.y = 1;
 scene.add(board.threeGroup);
 
 var ambientLight = new THREE.AmbientLight(0x000000);
@@ -68,38 +70,34 @@ lights[0] = new THREE.PointLight(0xffffff, 1, 0);
 lights[1] = new THREE.PointLight(0xffffff, 1, 0);
 lights[2] = new THREE.PointLight(0xffffff, 1, 0);
 
-lights[0].position.set(0, 200, 0);
-lights[1].position.set(100, 200, 100);
+lights[0].position.set(0, 5, 0);
+lights[1].position.set(50, 100, 50);
 lights[2].position.set(-100, -200, -100);
 
 scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var tiles = require('./randomTiles')(5,2);// from './grid';
-//tiles.threeGroup.rotation.x = -0.25;
-//tiles.threeGroup.position.z = - 1.25;
-//tiles.threeGroup.rotation.z = -0.5;
-scene.add(tiles.threeGroup);
+var createCards = require('./lib/cards');// from './grid';
+createCards().then((cards)=>{
+  cards.threeGroup.rotation.z = degToRad(10);
+  //tiles.threeGroup.position.z = - 1.25;
+  //tiles.threeGroup.rotation.z = -0.5;
+  scene.add(cards.threeGroup);
+});
 
-// var tiles = require('./randomTiles')(5,1);// from './grid';
-// tiles.threeGroup.rotation.x = 0.5;
-// tiles.threeGroup.position.y = 1;
-// scene.add(tiles.threeGroup);
-
-var testText = require('./text')('LOCI');
+var testText = require('./lib/text')('LOCI');
 //testText.rotation.z += 1.5708/2;
-
 //testText.rotation.z = -1.5708;
-//testText.rotation.z = 1.5708;
-testText.position.x = -4;
+testText.rotation.y = degToRad(20);
+testText.position.x = -4.5;
 testText.position.z = 1.5;
 scene.add(testText);
 
-var axes = require('./axes')();
+//var axes = require('./lib/axes')();
 //testText.rotation.y = camera.rotation.y;
 //testText.rotation.z = camera.rotation.z;
-scene.add(axes);
+//scene.add(axes);
 
 var render = function() {
   requestAnimationFrame(render);
