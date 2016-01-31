@@ -10,7 +10,7 @@ var textGeometry = (str) => {
   text3d.computeBoundingBox();
   var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
   var centerOffsetY = -0.5 * (text3d.boundingBox.max.y - text3d.boundingBox.min.y);
-
+  centerOffsetY;
   var material = new THREE.MeshFaceMaterial([
     new THREE.MeshBasicMaterial({
       color: Math.random() * 0xffffff,
