@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path');
 var clock = require('./util/clock.js');
 
 var winston = require('winston'); // Logger
@@ -191,6 +192,22 @@ app.io.route('message', function(next, data) {
   console.log(chatLog);
 });
 
+redirects(app, {
+  prefix: '',
+  map: {
+    '/docs': '/docs/'
+  }
+});
+
+var docsRedirect = koa();
+
+docsRedirect.use(function*(next) {
+  yield next;
+  this.status = 301;
+  this.redirect('/docs/');
+  this.body = 'Redirecting to docs cart';
+});
+
 // Serve the public
 app
   .use(function*(next) {
@@ -198,8 +215,9 @@ app
     yield next;
     logger.info('verbose', '%s %s - %s', this.method, this.url, clock.since(start, 'human'));
   })
-  .use(mount('/', serve('tmp')))
-  .use(mount('/docs', serve('docs')))
+  .use(mount('/', serve(path.resolve('tmp'))))
+  .use(mount('/docs/', serve(path.resolve('docs'))))
+  .use(mount('/docs', docsRedirect))
   .listen(8000, () => {
     logger.info('info', 'Listening at http://localhost:8000');
   });
