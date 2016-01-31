@@ -66,9 +66,17 @@ app.io.route('message', function* (next, data){
       username: this.username,
       message: data.message
     });
+    this.emit('playerAction', {
+      username: this.username,
+      message: data.message
+    });
     logger.info('Player action: ', data.message);
   } else {
     this.broadcast.emit('chatMessage', {
+      username: this.username,
+      message: data.message
+    });
+    this.emit('chatMessage', {
       username: this.username,
       message: data.message
     });
