@@ -14,9 +14,39 @@
       overflow: hidden;
     }
 
+    #container {
+      position: relative;
+    }
+
+    #overlay {
+      color: white;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
     #loci {
       width: 100vw !important;
-      height: 100vh !important;
+      height: 80vh !important;
+    }
+
+    #chat {
+      width: 100vw !important;
+      height: 20vh !important;
+    }
+
+    #messagebar {
+      width: 80vw;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+    }
+
+    #sendButton {
+      width: 20vw;
+      bottom: 0;
+      right: 0;
+      position: absolute;
     }
   </style>
   <script src="//localhost:35729/livereload.js"></script>
@@ -25,12 +55,74 @@
 </head>
 
 <body>
-  <canvas id="loci"></canvas>
+  <canvas id="loci">
+  </canvas>
+  <div id="chat">
+    <pre id="chatBody"></pre>
+    <div>
+      <input id="messagebar" type="text"></input>
+      <button id="sendButton" type="button" onclick="onSendMessage()">Send</button>
+    </div>
+  </div>
   <script src="/deps/three.min.js"></script>
   <script src="https://stemkoski.github.io/Three.js/js/Detector.js"></script>
   <script src="https://stemkoski.github.io/Three.js/js/Stats.js"></script>
   <script src="/three/SubdivisionModifier.js"></script>
+  <script src="/three/TextGeometry.js"></script>
+  <script src="/three/FontUtils.js"></script>
+  <script src="/three/helvetiker_regular.typeface.js"></script>
   <script src="/loci.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script>
+    console.log(' hey');
+    $(window).on('beforeunload', function() {
+      socket.close();
+      console.log('close socket');
+    });
+    var socket = io();
+    var onSendMessage = () => {
+      console.log('Send!');
+      socket.emit('message', {
+        username: 'anon',
+        message: $('#messagebar').val()
+      });
+      $('#messagebar').val('');
+    };
+    $('#messagebar').keydown(function(event) {
+      var keypressed = event.keyCode || event.which;
+      if (keypressed == 13) {
+        onSendMessage();
+      }
+    });
+    /*$(window).click(function () {
+      console.log('Click!');
+      socket.emit('playerAction');
+    });*/
+    $('#connectTwitch').click(function() {
+      socket.emit('connectTwitch');
+      console.log('connect socket');
+
+      return false;
+    });
+    $('#disconnectTwitch').click(function() {
+      $('#messages').empty();
+      socket.emit('disconnectTwitch');
+      console.log('disconnect socket');
+    });
+
+    socket.on('playerAction', function(msg) {
+      console.log('Client player messsage: ' + msg);
+      $('#chatBody').append('ACTION>>> ', msg.message, '<br>');
+      return false;
+    });
+    socket.on('chatMessage', function(msg) {
+      console.log('Client player chat messsage: ' + msg);
+      $('#chatBody').append('Chat> ', msg.message, '<br>');
+      return false;
+    });
+  </script>
+
 </body>
 
 </html>
