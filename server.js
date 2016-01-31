@@ -29,6 +29,15 @@ function myZeroes(rows, cols) {
   return array;
 }
 var playerVotes = myZeroes(5,5);
+var globalGrid = [];
+function calcGrid(rows, cols) {
+  for (a = 0; a < rows; a++) {
+    for (b=0; b< cols; b++) {
+      globalGrid[[a,b]] = {owner:1, type:"neutral"};
+    }
+  }
+}
+calcGrid(5,5);
 var locationSetA = [], locationSetB = [];
 var cardVoteA = [], cardVoteB = [];
 function voteSelectionA(x, y) {
@@ -74,6 +83,18 @@ function modeForCards(array)
     }
   }
   return maxEl;
+}
+function voteInput(godVote, xVote, yVote, cardVote) {
+  console.log('Server: Inputting vote');
+  if(godVote == '1'){
+    voteSelectionA(xVote, yVote);
+    cardSelectionA(cardVote)
+  }
+  else
+  {
+    voteSelectionB(xVote,yVote);
+    cardSelectionB(cardVote);
+  }
 }
 function measureVotes(){
   console.log('Server: Measuring votes!');
