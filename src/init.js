@@ -49,6 +49,8 @@ camera.rotation.z = -1.5708;
 // add the camera to the scene
 scene.add(camera);
 
+
+
 var createGrid = require('./lib/grid');
 var board = createGrid(5);
 board.threeGroup.rotation.x = degToRad(0);
@@ -56,6 +58,26 @@ board.threeGroup.rotation.y = degToRad(45);
 board.threeGroup.rotation.z = degToRad(20);
 board.threeGroup.position.y = 1;
 scene.add(board.threeGroup);
+
+/*
+var board;
+var createGrid = require('./lib/board');
+createGrid().then((grid)=>{
+  console.log(JSON.stringify(grid));
+  board = grid;
+  board.threeGroup.rotation.x = degToRad(0);
+  board.threeGroup.rotation.y = degToRad(45);
+  board.threeGroup.rotation.z = degToRad(20);
+  board.threeGroup.position.y = 1;
+  scene.add(board.threeGroup);
+})*/
+
+
+require('./lib/textures').then((buildingTextures)=>{
+  console.log(Object.keys(buildingTextures));
+});
+
+
 
 var ambientLight = new THREE.AmbientLight(0x000000);
 scene.add(ambientLight);

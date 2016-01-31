@@ -150,7 +150,7 @@ function measureVotes() {
 var channelList = ['#twitchplayspokemon'];
 var options = {
   options: {
-    debug: true
+    //debug: true
   },
   connection: {
     random: "chat",
