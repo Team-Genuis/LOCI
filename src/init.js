@@ -1,7 +1,8 @@
 var canvas = document.getElementById('loci');
 var scene = new THREE.Scene();
 
-var w = window.innerWidth, h = window.innerHeight;
+var w = window.innerWidth,
+  h = window.innerHeight;
 //////////////
 // RENDERER //
 //////////////
@@ -38,7 +39,7 @@ document.body.appendChild(stats.domElement);
 // CAMERA //
 ////////////
 var VIEW_ANGLE = 45,
-  ASPECT = w/h,
+  ASPECT = w / h,
   NEAR = 0.1,
   FAR = 20000;
 // set up camera
@@ -78,8 +79,8 @@ scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var createCards = require('./lib/cards');// from './grid';
-createCards().then((cards)=>{
+var createCards = require('./lib/cards'); // from './grid';
+createCards().then((cards) => {
   cards.threeGroup.rotation.z = degToRad(10);
   //tiles.threeGroup.position.z = - 1.25;
   //tiles.threeGroup.rotation.z = -0.5;

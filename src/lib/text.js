@@ -4,9 +4,9 @@ var textGeometry = (str) => {
     height: 0.5,
     curveSegments: 4,
     font: "helvetiker",
-bevelEnabled: true,
-bevelThickness: 0.2,
-bevelSize: 0.0
+    bevelEnabled: true,
+    bevelThickness: 0.2,
+    bevelSize: 0.0
   });
 
   text3d.computeBoundingBox();

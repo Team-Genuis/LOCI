@@ -9,7 +9,7 @@ $(function() {
 
   var onSendMessage = () => {
     console.log('Send!');
-    if($('#messagebar').val() !== ''){
+    if ($('#messagebar').val() !== '') {
       socket.emit('message', {
         username: 'anon',
         message: $('#messagebar').val()
@@ -20,8 +20,8 @@ $(function() {
 
   var chatLogCleaner = () => {
     let log = $('#messagebar').val();
-    if(log.length > 1000){
-      $('#messagebar').val(log.slice(0,1000));
+    if (log.length > 1000) {
+      $('#messagebar').val(log.slice(0, 1000));
     }
     setTimeout(chatLogCleaner, 30);
   };
@@ -35,7 +35,7 @@ $(function() {
   });
 
   $('#sendButton').click(function() {
-      onSendMessage();
+    onSendMessage();
   });
 
   $('#connectTwitch').click(function() {
@@ -64,14 +64,18 @@ $(function() {
   socket.on('playerAction', function(msg) {
     console.log('Client player messsage: ' + msg);
     $('#chatBody').append('ACTION>>> ', msg.message, '<br>');
-    $("#chatBody").animate({ scrollTop: $('#chatBody').prop("scrollHeight") }, "slow");
+    $("#chatBody").animate({
+      scrollTop: $('#chatBody').prop("scrollHeight")
+    }, "slow");
     return false;
   });
 
   socket.on('chatMessage', function(msg) {
     console.log('Client player chat messsage: ' + msg);
     $('#chatBody').append('Chat> ', msg.message, '<br>');
-    $("#chatBody").animate({ scrollTop: $('#chatBody').prop("scrollHeight") }, "slow");
+    $("#chatBody").animate({
+      scrollTop: $('#chatBody').prop("scrollHeight")
+    }, "slow");
 
     return false;
   });

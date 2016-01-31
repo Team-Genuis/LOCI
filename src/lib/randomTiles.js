@@ -14,7 +14,7 @@ var randomTiles = (num, color) => {
   let tileGroup = new THREE.Group();
   for (let j = -1 * Math.floor(numCol / 2); j <= Math.floor(numCol / 2); j++) {
     let tile = new THREE.Mesh(geometry, material);
-    if(color === 2) {
+    if (color === 2) {
       tile.position.set(numRow * 1.05 - 0.5, 1, j * 1.2);
     } else {
       tile.position.set(j * 1.2, 1, numRow * 1.05 - 0.5);

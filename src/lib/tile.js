@@ -1,4 +1,3 @@
-
 const tileImages = [
   '/img/ground.jpg',
   '/img/BasicBuildings/Archives.jpg',
