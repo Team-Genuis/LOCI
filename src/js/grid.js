@@ -3,11 +3,11 @@ var createGrid = (size) => {
   var grid = [];
   var gridGroup = new THREE.Group();
   if (!size) size = 5;
-//var texxtureLoader =
-  var texture = new THREE.TextureLoader().load( "img/ground.jpg" );
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 1, 1 );
+  //var texxtureLoader =
+  var texture = new THREE.TextureLoader().load("img/ground.jpg");
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(1, 1);
 
   var geometry = new THREE.BoxGeometry(1, 0.2, 1);
   var material = new THREE.MeshLambertMaterial();

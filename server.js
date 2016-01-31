@@ -49,7 +49,7 @@ app.io.route('addPlayer', function* (next, username){
   usernames[username] = username;
   ++numUsers;
   this.addedUser = true;
-  this.emit('enter', {
+  this.broadcast.emit('enter', {
     numUsers : numUsers
   });
   logger.info('Server: A player was added');
@@ -62,13 +62,13 @@ var actionRegex = /[1-2][a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i;
 app.io.route('message', function* (next, data){
   logger.info('PRecieved: ', data);
   if(actionRegex.test(data.message)){
-    this.emit('playerAction', {
+    this.broadcast.emit('playerAction', {
       username: this.username,
       message: data.message
     });
     logger.info('Player action: ', data.message);
   } else {
-    this.emit('chatMessage', {
+    this.broadcast.emit('chatMessage', {
       username: this.username,
       message: data.message
     });
