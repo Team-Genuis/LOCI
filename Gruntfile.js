@@ -120,9 +120,9 @@ module.exports = function(grunt) {
           },
           {
             expand: true,
-            flatten: true,
-            //cwd: 'src/',
-            src: ['src/img/**/*'],
+            flatten: false,
+            cwd: 'src/img/',
+            src: ['**/*'],
             dest: 'tmp/img/'
           },{
             expand: true,

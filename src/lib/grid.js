@@ -2,20 +2,12 @@ var createGrid = (size) => {
   console.log(size);
   var grid = [];
   var gridGroup = new THREE.Group();
-  var tileImages = ['img/ground.jpg','img/BasicBuildings/Archives.jpg',
-    'img/BasicBuildings/Archives_DarkPath.jpg','img/BasicBuildings/Archives_GoldPath.jpg',
-    'img/BasicBuildings/Chapel.jpg','img/BasicBuildings/Chapel_DarkPath.jpg',
-    'img/BasicBuildings/Chapel_GoldPath.jpg','img/BasicBuildings/Fortress.jpg',
-    'img/BasicBuildings/Fortress_Dark Path.jpg','img/BasicBuildings/Fortress_Gold Path.jpg',
-    'img/BasicBuildings/Guild Hall.jpg','img/BasicBuildings/Guild Hall_GoldPath.jpg',
-    'img/BasicBuildings/GuildHall_DarkPath.jpg','img/BasicBuildings/Tavern.jpg',
-    'img/BasicBuildings/Tavern_Dark Path.jpg','img/BasicBuildings/Tavern_Gold Path.jpg'];
   if (!size) size = 5;
-//var texxtureLoader =
-  var texture = new THREE.TextureLoader().load( tileImages[0] );
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 1, 1 );
+  //var texxtureLoader =
+  var texture = new THREE.TextureLoader().load('/img/ground.jpg');
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(1, 1);
 
   var geometry = new THREE.BoxGeometry(1, 0.2, 1);
   var material = new THREE.MeshLambertMaterial();

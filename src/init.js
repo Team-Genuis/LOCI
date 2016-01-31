@@ -30,7 +30,7 @@ var degToRad = (deg) => {
 // STATS
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
-stats.domElement.style.top = '20vh';
+stats.domElement.style.top = '0px';
 stats.domElement.style.zIndex = 100;
 document.body.appendChild(stats.domElement);
 
@@ -78,16 +78,13 @@ scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var tiles = require('./lib/randomTiles')(5,2);// from './grid';
-tiles.threeGroup.rotation.z = degToRad(20);
-//tiles.threeGroup.position.z = - 1.25;
-//tiles.threeGroup.rotation.z = -0.5;
-scene.add(tiles.threeGroup);
-
-// var tiles = require('./lib/randomTiles')(5,1);// from './grid';
-// tiles.threeGroup.rotation.x = 0.5;
-// tiles.threeGroup.position.y = 1;
-// scene.add(tiles.threeGroup);
+var createCards = require('./lib/cards');// from './grid';
+createCards().then((cards)=>{
+  cards.threeGroup.rotation.z = degToRad(10);
+  //tiles.threeGroup.position.z = - 1.25;
+  //tiles.threeGroup.rotation.z = -0.5;
+  scene.add(cards.threeGroup);
+});
 
 var testText = require('./lib/text')('LOCI');
 //testText.rotation.z += 1.5708/2;
