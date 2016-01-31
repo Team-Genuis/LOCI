@@ -40,6 +40,8 @@ var VIEW_ANGLE = 45,
   FAR = 20000;
 // set up camera
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+camera.rotation.z = -1.5708;
+
 // add the camera to the scene
 scene.add(camera);
 
@@ -48,9 +50,9 @@ scene.add(grid.threeGroup);
 
 var ambientLight = new THREE.AmbientLight(0x000000);
 scene.add(ambientLight);
-camera.position.z = 3;
+camera.position.z = 0;
 camera.position.y = 15;
-camera.position.x = 5;
+camera.position.x = 0;
 
 camera.lookAt(scene.position);
 //camera.rotation.z = 0.785398;
@@ -68,18 +70,6 @@ scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var render = function() {
-  requestAnimationFrame(render);
-  renderer.render(scene, camera);
-};
-
-adjustSize();
-render();
-
-window.addEventListener("resize", () => {
-  adjustSize();
-});
-
 var tiles = require('./randomTiles')(5,2);// from './grid';
 tiles.threeGroup.rotation.x = -0.25;
 tiles.threeGroup.position.z = - 1.25;
@@ -90,3 +80,32 @@ var tiles = require('./randomTiles')(5,1);// from './grid';
 tiles.threeGroup.rotation.x = 0.5;
 tiles.threeGroup.position.y = 1;
 scene.add(tiles.threeGroup);
+
+var testText = require('./text')('LOCI');
+//testText.rotation.z += 1.5708/2;
+testText.rotation.x = -1.5708;
+//testText.rotation.z = 1.5708;
+testText.rotation.z = 1.5708;
+//testText.rotation.z = -1.5708;
+//testText.rotation.z = 1.5708;
+scene.add(testText);
+
+var axes = require('./axes')();
+//testText.rotation.y = camera.rotation.y;
+//testText.rotation.z = camera.rotation.z;
+scene.add(axes);
+
+var render = function() {
+  requestAnimationFrame(render);
+  //testText.rotation.x += 0.1;
+  //testText.rotation.y += 0.1;
+  //testText.rotation.z += 0.1;
+  renderer.render(scene, camera);
+};
+
+adjustSize();
+render();
+
+window.addEventListener("resize", () => {
+  adjustSize();
+});

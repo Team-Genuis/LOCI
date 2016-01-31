@@ -14,6 +14,17 @@
       overflow: hidden;
     }
 
+    #container {
+      position: relative;
+    }
+
+    #overlay {
+      color: white;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
     #loci {
       width: 100vw !important;
       height: 100vh !important;
@@ -25,11 +36,17 @@
 </head>
 
 <body>
-  <canvas id="loci"></canvas>
+  <div id="container">
+    <canvas id="loci">
+      <h1 id="overlay">HEY MAN WHATS UP</h1>
+    </canvas>  </div>
   <script src="/deps/three.min.js"></script>
   <script src="https://stemkoski.github.io/Three.js/js/Detector.js"></script>
   <script src="https://stemkoski.github.io/Three.js/js/Stats.js"></script>
   <script src="/three/SubdivisionModifier.js"></script>
+  <script src="/three/TextGeometry.js"></script>
+  <script src="/three/FontUtils.js"></script>
+  <script src="/three/helvetiker_regular.typeface.js"></script>
   <script src="/loci.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
