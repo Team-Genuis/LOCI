@@ -42,6 +42,7 @@
     "grunt-check-dependencies": "^0.11.2",
     "grunt-contrib-clean": "^0.7.0",
     "grunt-cordovacli": "^0.8.2",
+    "grunt-fixmyjs": "^0.3.0",
     "grunt-replace": "^0.11.0",
     "humanize-number": "0.0.2",
     "jshint": "^2.4.1",

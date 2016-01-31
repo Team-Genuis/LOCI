@@ -21,63 +21,9 @@ var logger = new winston.Logger({
 
 logger.info('Creating loci server instance.');
 var app = koa();
+var usernames = [];
+var numUsers = 0;
 
-function myZeroes(rows, cols) {
-  var array = [], row = [];
-  while (cols--) row.push(0);
-  while (rows--) array.push(row.slice());
-  return array;
-}
-var playerVotes = myZeroes(5,5);
-var locationSetA = [], locationSetB = [];
-var cardVoteA = [], cardVoteB = [];
-function voteSelectionA(x, y) {
-   playerVotes[x][y]++;
-  if(locationSetA.indexOf([x,y]) != -1) {
-    console.log('Server: new vote for A at '+x+' '+y);
-    locationSetA.push([x,y]);
-  }
-}
-function voteSelectionB(x,y) {
-  playerVotes[x][y]--;
-  if(locationSetB.indexOf([x,y]) != -1) {
-    console.log('Server: new vote for B at '+x+' '+y);
-    locationSetB.push([x,y]);
-  }
-}
-
-function cardSelectionA(cVote) {
-  cardVoteA.push(cVote);
-  console.log('Server: new vote for A: '+cVote);
-}
-function cardSelectionB(cVote) {
-  cardVoteB.push(cVote);
-  console.log('Server: new vote for B: '+cVote);
-}
-function modeForCards(array)
-{
-  if(array.length == 0)
-    return null;
-  var modeMap = {};
-  var maxEl = array[0], maxCount = 1;
-  for(var i = 0; i < array.length; i++)
-  {
-    var el = array[i];
-    if(modeMap[el] == null)
-      modeMap[el] = 1;
-    else
-      modeMap[el]++;
-    if(modeMap[el] > maxCount)
-    {
-      maxEl = el;
-      maxCount = modeMap[el];
-    }
-  }
-  return maxEl;
-}
-function measureVotes(){
-  console.log('Server: Measuring votes!');
-}
 // middleware for connect and disconnect
 app.io.use(function* userLeft(next) {
   // on connect
@@ -110,6 +56,7 @@ app.io.route('addPlayer', function*(next, username) {
   });
   logger.info('Server: A player was added');
   console.log('Server: A player was added');
+  yield;
 });
 
 var actionRegex = /[1-2][a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i;
@@ -117,12 +64,7 @@ var actionRegex = /[1-2][a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i;
 //When client does an action, listen and broadcast
 app.io.route('message', function*(next, data) {
   logger.info('PRecieved: ', data);
-<<<<<<< HEAD:server/index.js
   if (actionRegex.test(data.message)) {
-=======
-  if(actionRegex.test(data.message)){
-
->>>>>>> master:server.js
     this.broadcast.emit('playerAction', {
       username: this.username,
       message: data.message
@@ -132,13 +74,6 @@ app.io.route('message', function*(next, data) {
       message: data.message
     });
     logger.info('Player action: ', data.message);
-    var str = data.message;
-    var godVote = str.charAt(0);
-    var xVote = str.charAt(1).toLowerCase() - 97;
-    var yVote = str.charAt(2).toLowerCase() - 97;
-    var cardVote = actionRegex.exec(str);
-    console.log("God:" + godVote + ", xVote: "+ xVote+", yVote"+yVote
-        +", card: "+cardVote);
   } else {
     this.broadcast.emit('chatMessage', {
       username: this.username,
@@ -150,11 +85,12 @@ app.io.route('message', function*(next, data) {
     });
     logger.info('Message: ', data.message);
   }
+  yield;
 });
 // Serve the public
 app
   .use(function*(next) {
-    let start = new Date;
+    let start = new Date();
     yield next;
     logger.info('verbose', '%s %s - %s', this.method, this.url, clock.since(start, 'human'));
   })

@@ -23,7 +23,17 @@ module.exports = function(grunt) {
         }
       },
       target2: ['jshint', 'mocha']
-    },
+    },fixmyjs: {
+      options: {
+          config: '.jshintrc',
+          indentpref: 'tabs'
+        },
+        test: {
+          files: [
+            {expand: true, cwd: 'src/js/', src: ['Ryan.js'], dest: 'src/lib/', ext: '.js'}
+          ]
+        }
+  },
     babel: {
       options: {
         sourceMap: true,
@@ -35,6 +45,12 @@ module.exports = function(grunt) {
           cwd: 'tmp',
           src: ['loci.js'],
           dest: 'tmp',
+          ext: '.js'
+        },{
+          expand: true,
+          cwd: 'src/',
+          src: ['sockets.js'],
+          dest: 'tmp/',
           ext: '.js'
         }]
       }
@@ -53,7 +69,7 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: ['src/**/*.js', 'test/**/*.js', '!src/vendor/**/*']
+      all: ['src/**/*.js', 'test/**/*.js', '!src/vendor/**/*','!src/js/Ryan.js']
     },
     watch: {
       app: {
@@ -304,7 +320,7 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', ['checkDependencies', 'jshint', 'build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
-  grunt.registerTask('build', [ 'transpile', 'copy:assets', 'replace', 'browserify']);
+  grunt.registerTask('build', [ 'transpile', 'copy:assets', 'replace', 'browserify','babel']);
   grunt.registerTask('transpile', ['jsdoc']);
   grunt.registerTask('clean', ['clean:tmp']);
   //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
