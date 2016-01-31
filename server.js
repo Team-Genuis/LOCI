@@ -11,7 +11,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var logger = new winston.Logger({
-  level: 'verbose',
+  level: 'silly',
   transports: [
     new(winston.transports.Console)({
       colorize: 'all'
@@ -25,9 +25,9 @@ var app = koa();
 // middleware for connect and disconnect
 app.io.use(function* userLeft(next) {
   // on connect
-  logger.log('somebody connected');
+  logger.info('somebody connected');
   console.log('Server: somebody connected');
-  logger.log(this.headers);
+  logger.info(this.headers);
   yield* next;
   // on disconnect
   if (this.addedUser) {
@@ -40,7 +40,7 @@ app.io.use(function* userLeft(next) {
       numUsers: numUsers
     });
   }
-  logger.log('somebody left');
+  logger.info('somebody left');
   console.log('Server: somebody left');
 });
 
@@ -52,25 +52,35 @@ app.io.route('addPlayer', function* (next, username){
   this.emit('enter', {
     numUsers : numUsers
   });
-  logger.log('Server: A player was added');
+  logger.info('Server: A player was added');
   console.log('Server: A player was added');
 });
 
+var actionRegex = /[1-2][a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i;
+
 //When client does an action, listen and broadcast
-app.io.route('playerAction', function* (next, message){
-  this.emit('playerAction', {
-    username: this.username,
-    message: 'Someone did this: ' + message
-  });
-  logger.log('Server: A player did an action');
-  console.log('Server: A player did an action');
+app.io.route('message', function* (next, data){
+  logger.info('PRecieved: ', data);
+  if(actionRegex.test(data.message)){
+    this.emit('playerAction', {
+      username: this.username,
+      message: data.message
+    });
+    logger.info('Player action: ', data.message);
+  } else {
+    this.emit('chatMessage', {
+      username: this.username,
+      message: data.message
+    });
+    logger.info('Message: ', data.message);
+  }
 });
 // Serve the public
 app
   .use(function*(next) {
     let start = new Date;
     yield next;
-    logger.log('verbose', '%s %s - %s', this.method, this.url, clock.since(start, 'human'));
+    logger.info('verbose', '%s %s - %s', this.method, this.url, clock.since(start, 'human'));
   })
   .use(mount('/', serve(__dirname + '/build')))
   .use(mount('/docs', serve(__dirname + '/docs')))

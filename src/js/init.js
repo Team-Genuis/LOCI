@@ -31,7 +31,7 @@ var degToRad = (deg) => {
 // STATS
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
-stats.domElement.style.bottom = '0px';
+stats.domElement.style.top = '0px';
 stats.domElement.style.zIndex = 100;
 document.body.appendChild(stats.domElement);
 
@@ -76,16 +76,16 @@ scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var tiles = require('./randomTiles')(5,2);// from './grid';
-tiles.threeGroup.rotation.x = -0.25;
-tiles.threeGroup.position.z = - 1.25;
-tiles.threeGroup.rotation.z = -0.5;
-scene.add(tiles.threeGroup);
-
-var tiles = require('./randomTiles')(5,1);// from './grid';
-tiles.threeGroup.rotation.x = 0.5;
-tiles.threeGroup.position.y = 1;
-scene.add(tiles.threeGroup);
+// var tiles = require('./randomTiles')(5,2);// from './grid';
+// tiles.threeGroup.rotation.x = -0.25;
+// tiles.threeGroup.position.z = - 1.25;
+// tiles.threeGroup.rotation.z = -0.5;
+// scene.add(tiles.threeGroup);
+//
+// var tiles = require('./randomTiles')(5,1);// from './grid';
+// tiles.threeGroup.rotation.x = 0.5;
+// tiles.threeGroup.position.y = 1;
+// scene.add(tiles.threeGroup);
 
 var testText = require('./text')('LOCI');
 //testText.rotation.z += 1.5708/2;

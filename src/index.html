@@ -27,7 +27,26 @@
 
     #loci {
       width: 100vw !important;
-      height: 100vh !important;
+      height: 80vh !important;
+    }
+
+    #chat {
+      width: 100vw !important;
+      height: 20vh !important;
+    }
+
+    #messagebar {
+      width: 80vw;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+    }
+
+    #sendButton {
+      width: 20vw;
+      bottom: 0;
+      right: 0;
+      position: absolute;
     }
   </style>
   <script src="//localhost:35729/livereload.js"></script>
@@ -36,10 +55,15 @@
 </head>
 
 <body>
-  <div id="container">
-    <canvas id="loci">
-      <h1 id="overlay">HEY MAN WHATS UP</h1>
-    </canvas>  </div>
+  <canvas id="loci">
+  </canvas>
+  <div id="chat">
+    <pre id="chatBody"></pre>
+    <div>
+      <input id="messagebar" type="text"></input>
+      <button id="sendButton" type="button" onclick="onSendMessage()">Send</button>
+    </div>
+  </div>
   <script src="/deps/three.min.js"></script>
   <script src="https://stemkoski.github.io/Three.js/js/Detector.js"></script>
   <script src="https://stemkoski.github.io/Three.js/js/Stats.js"></script>
@@ -57,10 +81,24 @@
       console.log('close socket');
     });
     var socket = io();
-    $(window).click(function () {
+    var onSendMessage = () => {
+      console.log('Send!');
+      socket.emit('message', {
+        username: 'anon',
+        message: $('#messagebar').val()
+      });
+      $('#messagebar').val('');
+    };
+    $('#messagebar').keydown(function(event) {
+      var keypressed = event.keyCode || event.which;
+      if (keypressed == 13) {
+        onSendMessage();
+      }
+    });
+    /*$(window).click(function () {
       console.log('Click!');
       socket.emit('playerAction');
-    });
+    });*/
     $('#connectTwitch').click(function() {
       socket.emit('connectTwitch');
       console.log('connect socket');
@@ -72,19 +110,19 @@
       socket.emit('disconnectTwitch');
       console.log('disconnect socket');
     });
-    $('form').submit(function() {
-      socket.emit('chat message', $('#m').val());
 
-      console.log('message: ', $('#m').val());
-      $('#m').val('');
-
+    socket.on('playerAction', function(msg) {
+      console.log('Client player messsage: ' + msg);
+      $('#chatBody').append('ACTION>>> ', msg.message, '<br>');
       return false;
     });
-    socket.on('playerMessage', function(msg) {
-      console.log('Client player messsage: ' + msg);
+    socket.on('chatMessage', function(msg) {
+      console.log('Client player chat messsage: ' + msg);
+      $('#chatBody').append('Chat> ', msg.message, '<br>');
       return false;
     });
   </script>
+
 </body>
 
 </html>
