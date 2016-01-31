@@ -3,10 +3,10 @@ var os = require('os');
 var path = require('path');
 var fs = require('fs');
 var clock = require('./util/clock.js');
-
 var winston = require('winston'); // Logger
 var serve = require('koa-static');
 var mount = require('koa-mount');
+var irc = require('tmi.js');
 
 var koa = require('koa.io');
 
@@ -147,6 +147,33 @@ function measureVotes() {
   console.log('Server: Measuring votes!');
 }
 
+var channelList = ['#twitchplayspokemon'];
+var options = {
+  options: {
+    debug: true
+  },
+  connection: {
+    random: "chat",
+    reconnect: true
+  },
+  channels: channelList
+};
+var twitchClient = new irc.client(options);
+var usernames = [];
+var numUsers = 0;
+
+var chatLog = '';
+var chatLogCleaner = () => {
+  if (chatLog.length > 1000) {
+    chatLog = chatLog.slice(0, 1000);
+  }
+  setTimeout(chatLogCleaner, 30);
+};
+chatLogCleaner();
+
+twitchClient.connect();
+twitchClient.addListener('message', handleChat);
+
 // middleware for connect and disconnect
 app.io.use(function* userLeft(next) {
   // on connect
@@ -160,7 +187,6 @@ app.io.use(function* userLeft(next) {
   if (this.addedUser) {
     delete usernames[this.username];
     --numUsers;
-
     // echo globally that this client has left
     this.broadcast.emit('user left', {
       username: this.username,
@@ -185,7 +211,7 @@ app.io.route('addPlayer', function(next, username) {
   console.log('Server: A player was added');
 });
 
-var actionRegex = /[1-2][a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i;
+var actionRegex = /[a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i; //[1-2] for gods
 
 //When client does an action, listen and broadcast
 app.io.route('message', function(next, data) {
@@ -227,6 +253,9 @@ docsRedirect.use(function*(next) {
   this.body = 'Redirecting to docs cart';
 });
 
+function handleChat(channel, twitchUser, twitchMessage, self) {
+  var twitchName = twitchUser.username;
+}
 // Serve the public
 app
   .use(function*(next) {
