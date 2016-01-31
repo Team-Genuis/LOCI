@@ -50,7 +50,10 @@ scene.add(camera);
 
 var createGrid = require('./lib/grid');
 var board = createGrid(5);
+board.threeGroup.rotation.x = degToRad(0);
 board.threeGroup.rotation.y = degToRad(45);
+board.threeGroup.rotation.z = degToRad(20);
+board.threeGroup.position.y = 1;
 scene.add(board.threeGroup);
 
 var ambientLight = new THREE.AmbientLight(0x000000);
@@ -67,8 +70,8 @@ lights[0] = new THREE.PointLight(0xffffff, 1, 0);
 lights[1] = new THREE.PointLight(0xffffff, 1, 0);
 lights[2] = new THREE.PointLight(0xffffff, 1, 0);
 
-lights[0].position.set(0, 200, 0);
-lights[1].position.set(100, 200, 100);
+lights[0].position.set(0, 5, 0);
+lights[1].position.set(50, 100, 50);
 lights[2].position.set(-100, -200, -100);
 
 scene.add(lights[0]);
@@ -76,7 +79,7 @@ scene.add(lights[1]);
 scene.add(lights[2]);
 
 var tiles = require('./lib/randomTiles')(5,2);// from './grid';
-//tiles.threeGroup.rotation.x = -0.25;
+tiles.threeGroup.rotation.z = degToRad(20);
 //tiles.threeGroup.position.z = - 1.25;
 //tiles.threeGroup.rotation.z = -0.5;
 scene.add(tiles.threeGroup);
@@ -95,10 +98,10 @@ testText.position.x = -4;
 testText.position.z = 1.5;
 scene.add(testText);
 
-var axes = require('./lib/axes')();
+//var axes = require('./lib/axes')();
 //testText.rotation.y = camera.rotation.y;
 //testText.rotation.z = camera.rotation.z;
-scene.add(axes);
+//scene.add(axes);
 
 var render = function() {
   requestAnimationFrame(render);
