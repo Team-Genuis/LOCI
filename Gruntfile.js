@@ -124,6 +124,12 @@ module.exports = function(grunt) {
             //cwd: 'src/',
             src: ['src/img/**/*'],
             dest: 'tmp/img/'
+          },{
+            expand: true,
+            flatten: true,
+            //cwd: 'src/',
+            src: ['src/audio/**/*'],
+            dest: 'tmp/audio/'
           }/*, {
             expand: true,
             cwd: 'tmp/',
