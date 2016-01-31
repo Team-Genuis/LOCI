@@ -126,6 +126,12 @@ module.exports = function(grunt) {
             dest: 'build/deps/'
           }, {
             expand: true,
+            flatten: true,
+            //cwd: 'src/',
+            src: ['src/img/**/*'],
+            dest: 'build/img/'
+          }, {
+            expand: true,
             cwd: 'tmp/',
             src: ['**'],
             dest: 'build/'

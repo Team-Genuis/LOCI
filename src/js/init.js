@@ -23,6 +23,10 @@ var adjustSize = () => {
   renderer.setSize(w, h);
 };
 
+var degToRad = (deg) => {
+  return Math.PI / 180 * deg;
+};
+
 
 // STATS
 var stats = new Stats();
@@ -46,7 +50,9 @@ camera.rotation.z = -1.5708;
 scene.add(camera);
 
 import grid from './grid';
-scene.add(grid.threeGroup);
+var board = grid(5);
+board.threeGroup.rotation.y = degToRad(45);
+scene.add(board.threeGroup);
 
 var ambientLight = new THREE.AmbientLight(0x000000);
 scene.add(ambientLight);
@@ -83,9 +89,7 @@ scene.add(tiles.threeGroup);
 
 var testText = require('./text')('LOCI');
 //testText.rotation.z += 1.5708/2;
-testText.rotation.x = -1.5708;
-//testText.rotation.z = 1.5708;
-testText.rotation.z = 1.5708;
+
 //testText.rotation.z = -1.5708;
 //testText.rotation.z = 1.5708;
 scene.add(testText);
