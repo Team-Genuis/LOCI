@@ -6,6 +6,7 @@ var clock = require('./util/clock.js');
 var winston = require('winston'); // Logger
 var serve = require('koa-static');
 var mount = require('koa-mount');
+var irc = require('tmi.js');
 
 var koa = require('koa.io');
 
@@ -146,7 +147,18 @@ function measureVotes() {
   console.log('Server: Measuring votes!');
 }
 
-
+var channelList = ['#twitchplayspokemon'];
+var options = {
+  options: {
+    debug: true
+  },
+  connection: {
+    random: "chat",
+    reconnect: true
+  },
+  channels: channelList
+};
+var twitchClient = new irc.client(options);
 var usernames = [];
 var numUsers = 0;
 
@@ -158,6 +170,9 @@ var chatLogCleaner = () => {
   setTimeout(chatLogCleaner, 30);
 };
 chatLogCleaner();
+
+twitchClient.connect();
+twitchClient.addListener('message', handleChat);
 
 // middleware for connect and disconnect
 app.io.use(function* userLeft(next) {
@@ -238,7 +253,9 @@ docsRedirect.use(function*(next) {
   this.body = 'Redirecting to docs cart';
 });
 
-
+function handleChat(channel, twitchUser, twitchMessage, self) {
+  var twitchName = twitchUser.username;
+}
 // Serve the public
 app
   .use(function*(next) {
