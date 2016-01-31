@@ -192,13 +192,6 @@ app.io.route('message', function(next, data) {
   console.log(chatLog);
 });
 
-redirects(app, {
-  prefix: '',
-  map: {
-    '/docs': '/docs/'
-  }
-});
-
 var docsRedirect = koa();
 
 docsRedirect.use(function*(next) {
