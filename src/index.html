@@ -33,6 +33,13 @@
     #chat {
       width: 100vw !important;
       height: 20vh !important;
+      padding-bottom: 2rem;
+    }
+
+    #chatBody {
+      height: 95%;
+      overflow: scroll;
+      margin-bottom: 2rem;
     }
 
     #messagebar {
@@ -114,11 +121,14 @@
     socket.on('playerAction', function(msg) {
       console.log('Client player messsage: ' + msg);
       $('#chatBody').append('ACTION>>> ', msg.message, '<br>');
+      $("#chatBody").animate({ scrollTop: $('#chatBody').prop("scrollHeight") }, "slow");
       return false;
     });
     socket.on('chatMessage', function(msg) {
       console.log('Client player chat messsage: ' + msg);
       $('#chatBody').append('Chat> ', msg.message, '<br>');
+      $("#chatBody").animate({ scrollTop: $('#chatBody').prop("scrollHeight") }, "slow");
+
       return false;
     });
   </script>
