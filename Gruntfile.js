@@ -32,8 +32,8 @@ module.exports = function(grunt) {
       build: {
         files: [{
           expand: true,
-          cwd: 'src',
-          src: ['**/*.js'],
+          cwd: 'tmp',
+          src: ['loci.js'],
           dest: 'tmp',
           ext: '.js'
         }]
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
     browserify: {
       dist: {
         files: {
-          'build/loci.js': ['tmp/js/**/*.js']
+          'tmp/loci.js': ['src/init.js','src/lib/**/*.js']
         },
         options: {
           //transform: ['coffeeify']
@@ -53,89 +53,64 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: ['src/**/*.js', 'tests/**/*.js']
+      all: ['src/**/*.js', 'test/**/*.js', '!src/vendor/**/*']
     },
     watch: {
-      server: {
+      app: {
         files: ['src/**/*', 'Gruntfile.js'],
         tasks: ['build'],
-
         options: {
           livereload: true,
           debounceDelay: 1000
         },
       },
-      config: {
-        files: ['config/*.js'],
-        tasks: ['copy:config'],
-      }
-    },
-    /**
-      The nodemon task will start your node server. The watch parameter will tell
-      nodemon what files to look at that will trigger a restart. Full grunt-nodemon
-      documentation
-    **/
-    nodemon: {
-      dev: {
-        script: 'server.js',
+      server: {
+        files: ['src/**/*', 'Gruntfile.js'],
         options: {
-          /** Environment variables required by the NODE application **/
-          env: {
-            "NODE_ENV": "development",
-            "NODE_CONFIG": "dev"
-          },
-          watch: ["**/*", "!.git/", "!tmp/"],
-          delay: 500,
-          callback: function(nodemon) {
-            nodemon.on('log', function(event) {
-              console.log(event.colour);
-            });
-            /** Open the application in a new browser window and is optional **/
-            nodemon.on('config:update', function() {
-              // Delay before server listens on port
-              setTimeout(function() {
-                //require('open')('http://127.0.0.1:8000');
-              }, 1000);
-            });
-            /** Update .rebooted to fire Live-Reload **/
-            nodemon.on('restart', function() {});
-          }
-        }
-      }
+          livereload: true,
+          debounceDelay: 1000
+        },
+      },
     },
     jsdoc: {
       dist: {
-        src: ['src/**/*.js'],
+        src: ['src/**/*.js','server/**/*.js'],
         options: {
-          destination: 'docs/jsdocs'
+          destination: 'docs'
         }
       }
     },
     copy: {
-      deps: {
+      assets: {
         files: [
           // includes files within path
           //{expand: true, src: ['path/*'], dest: 'dest/', filter: 'isFile'},
 
           // includes files within path and its sub-directories
+          /*{
+            expand: true,
+            flatten: true,
+            //cwd: 'src/',
+            src: ['src/index.'],
+            dest: 'build/deps/'
+          },*/ {
+            expand: true,
+            cwd: 'src/vendor/',
+            src: ['**/*'],
+            dest: 'tmp/vendor/'
+          },
           {
             expand: true,
             flatten: true,
             //cwd: 'src/',
-            src: ['node_modules/three/three.min.js'],
-            dest: 'build/deps/'
-          }, {
-            expand: true,
-            flatten: true,
-            //cwd: 'src/',
             src: ['src/img/**/*'],
-            dest: 'build/img/'
-          }, {
+            dest: 'tmp/img/'
+          }/*, {
             expand: true,
             cwd: 'tmp/',
             src: ['**'],
             dest: 'build/'
-          },
+          },*/
 
           // makes all src relative to cwd
           //{expand: true, cwd: 'path/', src: ['**'], dest: 'dest/'},
@@ -154,13 +129,8 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'src/',
             src: ['*', '!*.js'],
-            dest: 'build/'
-          }, {
-            expand: true,
-            cwd: 'tmp/',
-            src: ['**'],
-            dest: 'build/'
-          },
+            dest: 'tmp/'
+          }
 
           // makes all src relative to cwd
           //{expand: true, cwd: 'path/', src: ['**'], dest: 'dest/'},
@@ -182,14 +152,14 @@ module.exports = function(grunt) {
         options: {
           patterns: [{
             match: /<!--<script>var config;<\/script>-->/g,
-            replacement: '<script> var config = ' + JSON.stringify(require('./config/core.js')) + ';</script>'
+            replacement: '<script> var config = ' + JSON.stringify(require('./src/config.js')) + ';</script>'
           }]
         },
         files: [{
           expand: true,
           flatten: true,
           src: ['src/index.html'],
-          dest: 'build/'
+          dest: 'tmp/'
         }]
       }
     },
@@ -200,6 +170,42 @@ module.exports = function(grunt) {
         }
       }
     },
+    /**
+      The nodemon task will start your node server. The watch parameter will tell
+      nodemon what files to look at that will trigger a restart. Full grunt-nodemon
+      documentation
+    **/
+    nodemon: {
+      dev: {
+        script: 'server/index.js',
+        options: {
+          /** Environment variables required by the NODE application **/
+          env: {
+            "NODE_ENV": "development",
+            "NODE_CONFIG": "dev"
+          },
+          watch: ["server/**/*"],
+          delay: 1000,
+          callback: function(nodemon) {
+            nodemon.on('log', function(event) {
+              console.log(event.colour);
+            });
+            /** Open the application in a new browser window and is optional **/
+            nodemon.on('config:update', function() {
+              // Delay before server listens on port
+              setTimeout(function() {
+                //require('open')('http://127.0.0.1:8000');
+              }, 1000);
+            });
+            /** Update .rebooted to fire Live-Reload **/
+            nodemon.on('restart', function() {});
+          }
+        }
+      }
+    },
+    clean: {
+  tmp: ["tmp/**/*"]
+},
     cordovacli: {
       options: {
         path: 'build',
@@ -296,10 +302,11 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['checkDependencies','build', 'concurrent:watchers']);
+  grunt.registerTask('default', ['checkDependencies', 'jshint', 'build', 'concurrent:watchers']);
   //grunt.registerTask('run', ['watch:server','run' ]);
-  grunt.registerTask('build', ['jshint', 'transpile', 'copy:deps', 'copy:build', 'replace', 'browserify']);
-  grunt.registerTask('transpile', ['babel:build', 'jsdoc']);
+  grunt.registerTask('build', [ 'transpile', 'copy:assets', 'replace', 'browserify']);
+  grunt.registerTask('transpile', ['jsdoc']);
+  grunt.registerTask('clean', ['clean:tmp']);
   //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
   //grunt.registerTask('default', ['concurrent:target1', 'concurrent:target2']);
   // yaml tester for ./PATH/TO/YOUR/SWAGGER.yaml

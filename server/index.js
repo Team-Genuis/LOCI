@@ -28,7 +28,7 @@ app.io.use(function* userLeft(next) {
   logger.info('somebody connected');
   console.log('Server: somebody connected');
   logger.info(this.headers);
-  yield* next;
+  yield * next;
   // on disconnect
   if (this.addedUser) {
     delete usernames[this.username];
@@ -44,13 +44,13 @@ app.io.use(function* userLeft(next) {
   console.log('Server: somebody left');
 });
 
-app.io.route('addPlayer', function* (next, username){
+app.io.route('addPlayer', function*(next, username) {
   this.username = username;
   usernames[username] = username;
   ++numUsers;
   this.addedUser = true;
   this.broadcast.emit('enter', {
-    numUsers : numUsers
+    numUsers: numUsers
   });
   logger.info('Server: A player was added');
   console.log('Server: A player was added');
@@ -59,9 +59,9 @@ app.io.route('addPlayer', function* (next, username){
 var actionRegex = /[1-2][a-e]{2} (Chapel|Tavern|Guild|Archive|Fort)/i;
 
 //When client does an action, listen and broadcast
-app.io.route('message', function* (next, data){
+app.io.route('message', function*(next, data) {
   logger.info('PRecieved: ', data);
-  if(actionRegex.test(data.message)){
+  if (actionRegex.test(data.message)) {
     this.broadcast.emit('playerAction', {
       username: this.username,
       message: data.message
@@ -90,9 +90,8 @@ app
     yield next;
     logger.info('verbose', '%s %s - %s', this.method, this.url, clock.since(start, 'human'));
   })
-  .use(mount('/', serve(__dirname + '/build')))
-  .use(mount('/docs', serve(__dirname + '/docs')))
-  .use(mount('/three', serve(__dirname + '/three')))
+  .use(mount('/', serve('tmp')))
+  .use(mount('/docs', serve('docs')))
   .listen(8000, () => {
     logger.info('info', 'Listening at http://localhost:8000');
   });

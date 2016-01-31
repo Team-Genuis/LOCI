@@ -27,7 +27,6 @@ var degToRad = (deg) => {
   return Math.PI / 180 * deg;
 };
 
-
 // STATS
 var stats = new Stats();
 stats.domElement.style.position = 'absolute';
@@ -49,8 +48,8 @@ camera.rotation.z = -1.5708;
 // add the camera to the scene
 scene.add(camera);
 
-import grid from './grid';
-var board = grid(5);
+var createGrid = require('./lib/grid');
+var board = createGrid(5);
 board.threeGroup.rotation.y = degToRad(45);
 scene.add(board.threeGroup);
 
@@ -76,18 +75,18 @@ scene.add(lights[0]);
 scene.add(lights[1]);
 scene.add(lights[2]);
 
-var tiles = require('./randomTiles')(5,2);// from './grid';
+var tiles = require('./lib/randomTiles')(5,2);// from './grid';
 //tiles.threeGroup.rotation.x = -0.25;
 //tiles.threeGroup.position.z = - 1.25;
 //tiles.threeGroup.rotation.z = -0.5;
 scene.add(tiles.threeGroup);
 
-// var tiles = require('./randomTiles')(5,1);// from './grid';
+// var tiles = require('./lib/randomTiles')(5,1);// from './grid';
 // tiles.threeGroup.rotation.x = 0.5;
 // tiles.threeGroup.position.y = 1;
 // scene.add(tiles.threeGroup);
 
-var testText = require('./text')('LOCI');
+var testText = require('./lib/text')('LOCI');
 //testText.rotation.z += 1.5708/2;
 
 //testText.rotation.z = -1.5708;
@@ -96,7 +95,7 @@ testText.position.x = -4;
 testText.position.z = 1.5;
 scene.add(testText);
 
-var axes = require('./axes')();
+var axes = require('./lib/axes')();
 //testText.rotation.y = camera.rotation.y;
 //testText.rotation.z = camera.rotation.z;
 scene.add(axes);
