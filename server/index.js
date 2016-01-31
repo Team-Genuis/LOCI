@@ -1,5 +1,7 @@
 'use strict';
+var os = require('os');
 var path = require('path');
+var fs = require('fs');
 var clock = require('./util/clock.js');
 
 var winston = require('winston'); // Logger
@@ -19,6 +21,44 @@ var logger = new winston.Logger({
 
 logger.info('Creating loci server instance.');
 var app = koa();
+
+var usernames = [];
+var numUsers = 0;
+
+var chatLog = '';
+
+var chatLogCleaner = () => {
+  if (chatLog.length > 1000) {
+    chatLog = chatLog.slice(0, 1000);
+  }
+  fs.writeFile(os.tmpdir() + '/loci/chat.txt', chatLog, (err) => {
+    if (err) throw err;
+    console.log('It\'s saved!');
+  });
+  setTimeout(chatLogCleaner, 1000 * 30);
+};
+
+fs.exists(os.tmpdir() + '/loci', function(dirExists) {
+  fs.exists(os.tmpdir() + '/loci/chat.txt', function(fileExists) {
+    if (dirExists && fileExists) {
+      fs.readFile(os.tmpdir() + '/loci/chat.txt', chatLog, (err, data) => {
+        if (err) throw err;
+        console.log('load chat');
+        chatLog = '' + data;
+        chatLogCleaner();
+      });
+    } else if (!dirExists) {
+      fs.mkdir(os.tmpdir() + '/loci', (err) => {
+        if (err) throw err;
+        fs.writeFile(os.tmpdir() + '/loci/chat.txt', chatLog, (err) => {
+          if (err) throw err;
+          console.log('empty chat');
+          chatLogCleaner();
+        });
+      });
+    }
+  });
+});
 
 function myZeroes(rows, cols) {
   var array = [],
@@ -107,17 +147,6 @@ function measureVotes() {
   console.log('Server: Measuring votes!');
 }
 
-var usernames = [];
-var numUsers = 0;
-
-var chatLog = '';
-var chatLogCleaner = () => {
-  if (chatLog.length > 1000) {
-    chatLog = chatLog.slice(0, 1000);
-  }
-  setTimeout(chatLogCleaner, 30);
-};
-chatLogCleaner();
 // middleware for connect and disconnect
 app.io.use(function* userLeft(next) {
   // on connect
